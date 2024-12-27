@@ -2,12 +2,14 @@
 :root {
   --dark-grey: #333333;
   --light-grey: #808080;
+  --light-text: #E5E5E5;
+  --medium-text: #939393;
   --yellow: #FFB612;
   --red: #DC0A17;
   --green: #2FC022;
 }
 
-//Fazer esse * e body é umportante para 'resetar' a página
+//Fazer esse * e body é importante para 'resetar' a página
 * {
   font-family: 'Gotham';
   box-sizing: border-box;
