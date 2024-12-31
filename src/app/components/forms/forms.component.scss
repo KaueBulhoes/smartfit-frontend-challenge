@@ -53,6 +53,7 @@
 
   .btn-wrapper {
     display: flex;
+    flex-direction: column;
     gap: 12px;
     align-items: center;
     justify-content: center;
@@ -85,10 +86,31 @@
     margin: 32px 0;
     position: relative;
     width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: 12px;
 
-    span {
-      position: absolute;
-      right: 0;
+    input[type="checkbox"] {
+      margin-right: 4px;
+    }
+  }
+}
+
+
+@media (min-width: 768px) {
+  .form-group {
+    .btn-wrapper {
+      flex-direction: row;
+
+      .btn {
+        width: 25%;
+      }
+    }
+
+    .checkbox-wrapper {
+      flex-direction: row;
+      justify-content: space-between;
     }
   }
 }
