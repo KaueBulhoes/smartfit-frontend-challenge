@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { GetUnitsService } from '../../services/get-units.service';
 import { Location } from '../../types/location.interface';
+import { FilterUnitsService } from '../../services/filter-units.service';
 
 @Component({
   selector: 'app-forms',
@@ -13,13 +14,14 @@ import { Location } from '../../types/location.interface';
 })
 export class FormsComponent {
   results: Location[] = [];
-  filtredResults: Location [] = [];
+  filtredResults: Location[] = [];
   formGroup!: FormGroup;
 
   constructor(
     private formBuilder: FormBuilder,
-    private unitService: GetUnitsService
-  ) {}
+    private unitService: GetUnitsService,
+    private filterUnitsService: FilterUnitsService
+  ) { }
 
   ngOnInit(): void {
     //Dentro será declarado os campos do formulário
@@ -35,16 +37,12 @@ export class FormsComponent {
   }
 
   onSubmit() {
-    //Se o valor do formGroupd NÃO for showClosed
-    if(!this.formGroup.value.showClosed) {
-      this.filtredResults = this.results.filter(location => location.opened === true)
-    } else {
-      this.filtredResults = this.results
-    }
+    let { showClosed, hour } = this.formGroup.value
+    this.filtredResults = this.filterUnitsService.filter(this.results, showClosed, hour)
   }
+
 
   onClean() {
     this.formGroup.reset()
   }
-
 }
