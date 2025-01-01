@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { GetUnitsService } from '../../services/get-units.service';
 import { Location } from '../../types/location.interface';
@@ -13,6 +13,8 @@ import { FilterUnitsService } from '../../services/filter-units.service';
   styleUrl: './forms.component.scss'
 })
 export class FormsComponent {
+  @Output() submitEvent = new EventEmitter();
+
   // Lista de resultados obtidos do serviço
   results: Location[] = [];
   // Lista de resultados filtrados com base no formulário
@@ -29,28 +31,28 @@ export class FormsComponent {
   ngOnInit(): void {
     // Inicializa o grupo de formulários com os campos necessários
     this.formGroup = this.formBuilder.group({
-      hour: '', // Campo para horário
-      showClosed: true // Campo para exibir ou ocultar unidades fechadas
+      hour: '',
+      showClosed: true // Assim eu consigo manipular o valor da checkbox
     });
 
     // Chama o serviço para buscar todas as unidades
+    // Aqui eu me subscrevi para observar o allUnits$ através do método getAllUnits()
     this.unitService.getAllUnits().subscribe(data => {
-      // Armazena os resultados completos na propriedade `results`
-      this.results = data.locations;
-      // Inicializa a lista filtrada com todos os resultados
-      this.filtredResults = data.locations;
-    });
+      this.results = data;
+      this.filtredResults = data
+    })
   }
 
-  // Método chamado ao submeter o formulário
   onSubmit() {
     // Extrai os valores dos campos do formulário
     let { showClosed, hour } = this.formGroup.value;
     // Filtra os resultados com base nos valores do formulário
     this.filtredResults = this.filterUnitsService.filter(this.results, showClosed, hour);
+    this.unitService.setFilteredUnits(this.filtredResults);
+
+    this.submitEvent.emit();
   }
 
-  // Método para limpar o formulário e restaurar os valores iniciais
   onClean() {
     this.formGroup.reset(); // Reseta os valores do formulário
   }
